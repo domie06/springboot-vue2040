@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.KehuDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.name as name
+        ,a.phone as phone
+        ,a.youxiang as youxiang
+        ,a.id_number as idNumber
+        ,a.sex_types as sexTypes
+        ,a.my_photo as myPhoto
+        ,a.nation as nation
+        ,a.politics_types as politicsTypes
+        ,a.birthplace as birthplace
+        ,a.kehu_content as kehuContent
+        ,a.diqu_types as diquTypes
+        ,a.biaoqian_types as biaoqianTypes
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.KehuView" >
+        SELECT
+        <include refid="Base_Column_List" />
+
+--         级联表的字段
+
+        FROM kehu  a
+
+        <where>
+            <if test=" params.name != '' and params.name != null and params.name != 'null' ">
+                and a.name like CONCAT('%',#{params.name},'%')
+            </if>
+            <if test=" params.phone != '' and params.phone != null and params.phone != 'null' ">
+                and a.phone like CONCAT('%',#{params.phone},'%')
+            </if>
+            <if test=" params.youxiang != '' and params.youxiang != null and params.youxiang != 'null' ">
+                and a.youxiang like CONCAT('%',#{params.youxiang},'%')
+            </if>
+            <if test=" params.idNumber != '' and params.idNumber != null and params.idNumber != 'null' ">
+                and a.id_number like CONCAT('%',#{params.idNumber},'%')
+            </if>
+            <if test="params.sexTypes != null">
+                and a.sex_types = #{params.sexTypes}
+            </if>
+            <if test=" params.nation != '' and params.nation != null and params.nation != 'null' ">
+                and a.nation like CONCAT('%',#{params.nation},'%')
+            </if>
+            <if test="params.politicsTypes != null">
+                and a.politics_types = #{params.politicsTypes}
+            </if>
+            <if test=" params.birthplace != '' and params.birthplace != null and params.birthplace != 'null' ">
+                and a.birthplace like CONCAT('%',#{params.birthplace},'%')
+            </if>
+            <if test=" params.kehuContent != '' and params.kehuContent != null and params.kehuContent != 'null' ">
+                and a.kehu_content like CONCAT('%',#{params.kehuContent},'%')
+            </if>
+            <if test="params.diquTypes != null">
+                and a.diqu_types = #{params.diquTypes}
+            </if>
+            <if test="params.biaoqianTypes != null">
+                and a.biaoqian_types = #{params.biaoqianTypes}
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and DATE_FORMAT(a.insert_time, '%Y-%m-%d %H:%T:%s') >=
+                DATE_FORMAT(#{params.insertTimeStart}, '%Y-%m-%d %H:%T:%s')   ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and DATE_FORMAT(a.insert_time, '%Y-%m-%d %H:%T:%s') <=
+                DATE_FORMAT(#{params.insertTimeEnd} , '%Y-%m-%d %H:%T:%s')    ]]>
+            </if>
+
+        </where>
+        order by a.id desc
+    </select>
+
+</mapper>
